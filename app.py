@@ -7,12 +7,12 @@ def main():
     st.title('Credit Approval Prediction')
     st.write('This app predicts credit approval based on user input.')
 
-    model_file = "gmsc.pkl"
+    model_file = "gmsc3.pkl"
     with open(model_file, 'rb') as file:
         model = pickle.load(file)
 
     # Input fields
-    SeriousDlqin2yrs = st.slider('Dalam 2 tahun berapa kali menunggak 30 - 59 hari', 0, 20)
+    # SeriousDlqin2yrs = st.slider('Dalam 2 tahun berapa kali menunggak 30 - 59 hari', 0, 20)
     RevolvingUtilizationOfUnsecuredLines = st.number_input('Total saldo kartu kredit', 0.0)
     age = st.slider('Umur', 18, 110)
     NumberOfTime30_59DaysPastDueNotWorse = st.slider('Jumlah menunggak dalam durasi 30 - 58 hari', 0, 10)
@@ -24,24 +24,15 @@ def main():
     NumberOfTime60_89DaysPastDueNotWorse = st.slider('Jumlah menunggak dalam durasi 60 - 89 hari', 0, 20)
     NumberOfDependents = st.slider('Jumlah tanggungan', 0, 10)
 
-    # RevolvingUtilizationOfUnsecuredLines, age,
-    #    NumberOfTime30-59DaysPastDueNotWorse, DebtRatio, MonthlyIncome,
-    #    NumberOfOpenCreditLinesAndLoans, NumberOfTimes90DaysLate,
-    #    NumberRealEstateLoansOrLines, NumberOfTime60-89DaysPastDueNotWorse,
-    #    NumberOfDependents
-
     user_input = np.array([[RevolvingUtilizationOfUnsecuredLines,age,NumberOfTime30_59DaysPastDueNotWorse,DebtRatio,MonthlyIncome, NumberOfOpenCreditLinesAndLoans,NumberOfTimes90DaysLate,NumberRealEstateLoansOrLines,NumberOfTime60_89DaysPastDueNotWorse,NumberOfDependents]])  # Adjust based on your model's input requirements
 
-    print(user_input)
+    if st.button('Predict Approval'):
+        user_input = np.array([[RevolvingUtilizationOfUnsecuredLines, age, NumberOfTime30_59DaysPastDueNotWorse, DebtRatio, MonthlyIncome, NumberOfOpenCreditLinesAndLoans, NumberOfTimes90DaysLate, NumberRealEstateLoansOrLines, NumberOfTime60_89DaysPastDueNotWorse, NumberOfDependents]])
+        prediction = model.predict(user_input)
+        prediction_probability = model.predict_proba(user_input)[0][1]
 
-    # Convert user input to XGBoost's DMatrix format
-    # dmatrix = xgb.DMatrix(user_input)
-
-    # prediction = loaded_model.predict(dmatrix)
-    # prediction_label = "Approved" if prediction[0] >= 0.5 else "Not Approved"
-    prediction_label = 0.2
-
-    st.write('Prediction:', prediction_label)  # Display the prediction result
+        st.write('Prediction:', prediction[0])
+        st.write('Approval Probability:', prediction_probability)
 
 if __name__ == '__main__':
     main()
