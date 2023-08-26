@@ -11,13 +11,23 @@ def main():
     with open(model_file, 'rb') as file:
         model = pickle.load(file)
 
+    def calculate_debt(expense, income):
+        if (income != 0):
+            debt= expense/income
+        else:
+            debt= 'Income cant be zero!'
+        return debt
+
     # Input fields
     # SeriousDlqin2yrs = st.slider('Dalam 2 tahun berapa kali menunggak 30 - 59 hari', 0, 20)
     RevolvingUtilizationOfUnsecuredLines = st.number_input('Total saldo kartu kredit', 0.0)
     age = st.slider('Umur', 18, 110)
     NumberOfTime30_59DaysPastDueNotWorse = st.slider('Jumlah menunggak dalam durasi 30 - 58 hari', 0, 10)
-    DebtRatio = st.number_input('Ratio Hutang', 0.0, 1.0)
-    MonthlyIncome = st.number_input('Pendapatan Perbulan')
+    
+    MonthlyIncome = st.number_input('Pendapatan Perbulan', min_value=0.0)
+    MonthlyExpense= st.number_input('Pengeluaran Perbulan (Termasuk pembayaran hutang dan biaya hidup)', min_value=0.0)
+    DebtRatio = calculate_debt(MonthlyExpense, MonthlyIncome)
+    st.write(f'Debt Ratio: {DebtRatio}')
     NumberOfOpenCreditLinesAndLoans = st.slider('Jumlah Cicilan ', 0, 20)
     NumberOfTimes90DaysLate = st.slider('Jumlah menunggak lebih dari 90 hari', 0, 20)
     NumberRealEstateLoansOrLines = st.slider('Jumlah cicilan property', 0, 20)
