@@ -44,5 +44,6 @@ def main():
         st.write('Prediction:', prediction[0])
         st.write('Approval Probability:', prediction_probability)
 
+
 if __name__ == '__main__':
     main()
